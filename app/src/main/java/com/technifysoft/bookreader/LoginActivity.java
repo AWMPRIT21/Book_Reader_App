@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
                         Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -102,10 +102,11 @@ public class LoginActivity extends AppCompatActivity {
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        assert firebaseUser != null;
         ref.child(firebaseUser.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         progressDialog.dismiss();
                        String userType = "" + snapshot.child("userType").getValue();
                        
@@ -120,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError error) {
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });

@@ -14,7 +14,7 @@ public class MyApplication extends Application {
         super.onCreate();
     }
 
-    public static final String formatTimestamp(long timestamp){
+    public static String formatTimestamp(long timestamp){
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(timestamp);
 

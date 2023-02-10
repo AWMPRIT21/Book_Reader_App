@@ -1,5 +1,6 @@
 package com.technifysoft.bookreader;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -45,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
             ref.child(firebaseUser.getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot snapshot) {
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String userType = "" + snapshot.child("userType").getValue();
 
                             if(userType.equals("user")){
@@ -59,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError error) {
+                        public void onCancelled(@NonNull DatabaseError error) {
 
                         }
                     });

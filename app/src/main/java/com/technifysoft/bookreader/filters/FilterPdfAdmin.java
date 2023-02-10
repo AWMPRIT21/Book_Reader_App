@@ -51,7 +51,7 @@ public class FilterPdfAdmin extends Filter {
 
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-            adapterPdfAdmin.pdfArrayList = (ArrayList<ModelPdf>)results.values;
+            adapterPdfAdmin.categoryArrayList = (ArrayList<ModelPdf>)results.values;
 
             adapterPdfAdmin.notifyDataSetChanged();
     }

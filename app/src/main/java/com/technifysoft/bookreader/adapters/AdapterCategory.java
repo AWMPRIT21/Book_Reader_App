@@ -130,9 +130,7 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.Holder
     @Override
     public Filter getFilter() {
         FilterCategory filter = null;
-        if(filter== null){
-            filter = new FilterCategory(filterList, this);
-        }
+        filter = new FilterCategory(filterList, this);
         return filter;
     }
 

@@ -29,7 +29,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
 
     private AdapterPdfAdmin adapterPdfAdmin;
 
-    private String categoryId,categoryTitle;
+    private String categoryId;
 
     private static final String TAG = "PDF_LIST_TAG";
 
@@ -43,7 +43,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         categoryId = intent.getStringExtra("categoryId");
-        categoryTitle =  intent.getStringExtra("categoryTitle");
+        String categoryTitle = intent.getStringExtra("categoryTitle");
 
         binding.subTitleTv.setText(categoryTitle);
 
@@ -99,6 +99,7 @@ public class PdfListAdminActivity extends AppCompatActivity {
                             ModelPdf model = ds.getValue(ModelPdf.class);
                             pdfArrayList.add(model);
 
+                            assert model != null;
                             Log.d(TAG , "onDataChange: "+model.getId()+ " " + model.getTitle());
 
                         }

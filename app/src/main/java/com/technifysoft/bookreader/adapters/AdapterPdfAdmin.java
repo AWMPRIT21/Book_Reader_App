@@ -2,7 +2,11 @@ package com.technifysoft.bookreader.adapters;
 
 import static com.technifysoft.bookreader.Constants.MAX_BYTES_PDF;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.technifysoft.bookreader.MyApplication;
+import com.technifysoft.bookreader.PdfEditActivity;
 import com.technifysoft.bookreader.databinding.RowPdfAdminBinding;
 import com.technifysoft.bookreader.filters.FilterPdfAdmin;
 import com.technifysoft.bookreader.models.ModelPdf;
@@ -40,6 +45,7 @@ import java.util.ArrayList;
 
 public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.HolderPdfAdmin> implements Filterable {
 
+    public ArrayList<ModelPdf> categoryArrayList;
     private Context context;
 
     public ArrayList<ModelPdf> pdfArrayList,filterList;
@@ -50,12 +56,19 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
 
     private FilterPdfAdmin filter;
 
+    private ProgressDialog progressDialog;
+
 
 
     public AdapterPdfAdmin(Context context, ArrayList<ModelPdf> pdfArrayList) {
         this.context = context;
         this.pdfArrayList = pdfArrayList;
         this.filterList = pdfArrayList;
+
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle("Please Wait...");
+        progressDialog.setCanceledOnTouchOutside(false);
+
     }
 
     @NonNull
@@ -86,6 +99,7 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 moreOptionsDialog(model,holder);
             }
         });
@@ -94,7 +108,96 @@ public class AdapterPdfAdmin extends RecyclerView.Adapter<AdapterPdfAdmin.Holder
     }
 
     private void moreOptionsDialog(ModelPdf model, HolderPdfAdmin holder) {
-        String[] options = {"Edit", "Delete"};
+
+        String bookId = model.getId();
+        String bookUrl = model.getUrl();
+        String bookTitle = model.getTitle();
+
+
+        String[] options = {"Edit" , "Delete"};
+
+        //alert dialog
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle("Choose Options")
+                .setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        
+                        if(which==0){
+
+                            Intent intent = new Intent(context, PdfEditActivity.class);
+                            intent.putExtra("bookId", bookId);
+                            context.startActivity(intent);
+
+                            
+                        }
+                        else if (which==1) {
+                            deleteBook(model,holder);
+                            
+                        }
+
+                    }
+                })
+                .show();
+    }
+
+    private void deleteBook(ModelPdf model, HolderPdfAdmin holder) {
+
+        String bookId = model.getId();
+        String bookUrl = model.getUrl();
+        String bookTitle = model.getTitle();
+
+
+        Log.d(TAG, "deleteBook: Deleting...");
+        progressDialog.setMessage("Deleting "+ bookTitle + "...");
+        progressDialog.show();
+
+        Log.d(TAG , "deleteBook: Deleting from storage...");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(bookUrl);
+        storageReference.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG , "onSuccess: Deleted from Storage...");
+                        Log.d(TAG , "onSuccess: Now deleting info from db...");
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Books");
+                        reference.child(bookId)
+                                .removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d(TAG, "onSuccess: Deleted from db too...");
+                                        progressDialog.dismiss();
+                                        Toast.makeText(context, "Book deleted Successfully...", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "onFailure: Failed to delete from db due to "+ e.getMessage());
+                                        progressDialog.dismiss();
+                                        Toast.makeText(context, ""+ e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG , "onFailure: Failed to delete from storage due to "+ e.getMessage());
+                        progressDialog.dismiss();
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
 
 
     }

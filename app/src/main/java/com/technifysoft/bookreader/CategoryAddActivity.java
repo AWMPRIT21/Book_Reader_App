@@ -101,7 +101,7 @@ public class CategoryAddActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
                         Toast.makeText(CategoryAddActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
 

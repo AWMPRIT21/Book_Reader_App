@@ -32,6 +32,7 @@ import com.technifysoft.bookreader.databinding.ActivityPdfAddBinding;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@SuppressWarnings("ALL")
 public class PdfAddActivity extends AppCompatActivity {
 
     private ActivityPdfAddBinding binding;
@@ -288,6 +289,7 @@ public class PdfAddActivity extends AppCompatActivity {
             if(requestCode == PDF_PICK_CODE){
                 Log.d(TAG , "onActivityResult:PDF Picked");
 
+                assert data != null;
                 pdfUri = data.getData();
 
                 Log.d(TAG , "onActivityResult: URI: "+ pdfUri);

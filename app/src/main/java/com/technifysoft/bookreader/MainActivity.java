@@ -10,12 +10,10 @@ import com.technifysoft.bookreader.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding=ActivityMainBinding.inflate(getLayoutInflater());
+        com.technifysoft.bookreader.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {

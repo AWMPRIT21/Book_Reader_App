@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -119,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         hashMap.put("timestamp" , timestamp);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        assert uid != null;
         ref.child(uid)
                 .setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -132,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
